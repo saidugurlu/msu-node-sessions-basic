@@ -56,6 +56,13 @@ app.get('/current-user', (req, res) => {
         res.send('no user logged in');
     }
 });
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        res.send('User logged out');
+    });
+});
 app.listen(PORT, () => {
     console.log(`listening at http://localhost:${PORT}`)
 });
