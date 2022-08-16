@@ -5,11 +5,12 @@ import session from 'express-session';
 const app = express();
 const PORT = 3024;
 
+dotenv.config();
 
 
 app.use(
   session({
-    secret: 'tempsecret',
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     })
