@@ -1,7 +1,21 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
  
 const app = express();
 const PORT = 3024;
+
+
+
+app.use(
+  session({
+    secret: 'tempsecret',
+    resave: true,
+    saveUninitialized: true,
+    })
+    
+);
+app.use(cookieParser());
 
 const users = [
     {
@@ -26,16 +40,22 @@ app.get('/', (req, res) => {
 app.get('/login/:username', (req, res) => {
     const user = users.find((user) => user.username === req.params.username);
     if (user) {
-        res.send(`User identified: ${JSON.stringify(user)}`);
+        req.session.user = user;
+        req.session.cookie.expires = new Date(Date.now() + 10000); // 10 seconds
+        req.session.save();
+        res.send(`User logged in: ${JSON.stringify(user)}`);
     } else {
         res.status(500).send('bad login');
     }
 });
 
 app.get('/current-user', (req, res) => {
-    res.send('no user logged in');
+    if (req.session.user) {
+        res.send(req.session.user);
+    } else {
+        res.send('no user logged in');
+    }
 });
-
 app.listen(PORT, () => {
     console.log(`listening at http://localhost:${PORT}`)
 });
