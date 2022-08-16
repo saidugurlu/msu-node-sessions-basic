@@ -31,6 +31,11 @@ app.get('/login/:username', (req, res) => {
         res.status(500).send('bad login');
     }
 });
+
+app.get('/current-user', (req, res) => {
+    res.send('no user logged in');
+});
+
 app.listen(PORT, () => {
     console.log(`listening at http://localhost:${PORT}`)
 });
